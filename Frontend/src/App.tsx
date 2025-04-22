@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CPUMonitor from './components/CPUMonitor';
 import ConfirmationModal from './components/ConfirmationModal';
 
@@ -12,7 +12,7 @@ const devicesInitial = [
     type: "Amazon EC2",
     icon: EC2_ICON,
     uptime: 95, // in percentage
-    cpuUsage: 45, // in percentage
+    cpuUsage: 0, // in percentage
     ramUsage: 70, // in percentage
     diskUsage: 60, // in percentage
     region: "us-east-1",
@@ -41,6 +41,7 @@ const devicesInitial = [
 
 function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }) {
   return (
+    
     <div
       style={{ width: 200 }}
       className="flex flex-col items-center p-3 rounded-md bg-black/10 shadow-md mx-3 mt-6"
@@ -119,6 +120,27 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState(null);
 
+  // Fetch real-time CPU usage for EC2 instance with id: 1
+  useEffect(() => {
+    const fetchCPU = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/metrics'); // Replace with your backend API endpoint
+        const data = await res.json();
+        setDevices((prevDevices) =>
+          prevDevices.map((device) =>
+            device.id === 1 ? { ...device, cpuUsage: data.cpu } : device
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching CPU metrics:", error);
+      }
+    };
+    // Fetch immediately and then every 30 seconds
+    fetchCPU();
+    const interval = setInterval(fetchCPU, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Simulated handlers
   const handleShutdown = (id) => {
