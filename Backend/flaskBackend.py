@@ -4,7 +4,7 @@ import boto3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins
 instance_id = 'i-0dc17676ee962edcd'
 
 def get_latest_cpu_utilization():
