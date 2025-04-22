@@ -124,7 +124,7 @@ function App() {
   useEffect(() => {
     const fetchCPU = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:5000'); // Replace with your backend API endpoint
+        const res = await fetch('http://127.0.0.1:5000/api/cpu'); // Replace with your backend API endpoint
         const data = await res.json();
         setDevices((prevDevices) =>
           prevDevices.map((device) =>
