@@ -38,4 +38,4 @@ def get_cpu():
         return jsonify({'error': 'No CPU data available'}), 503
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
