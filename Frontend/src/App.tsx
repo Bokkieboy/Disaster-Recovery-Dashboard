@@ -13,8 +13,6 @@ const devicesInitial = [
     icon: EC2_ICON,
     uptime: 95, // in percentage
     cpuUsage: 0, // in percentage
-    ramUsage: 70, // in percentage
-    diskUsage: 60, // in percentage
     region: "us-east-1",
   },
   {
@@ -23,8 +21,6 @@ const devicesInitial = [
     icon: EC2_ICON,
     uptime: 85,
     cpuUsage: 30,
-    ramUsage: 50,
-    diskUsage: 40,
     region: "us-west-2",
   },
   {
@@ -33,8 +29,6 @@ const devicesInitial = [
     icon: SERVER_ICON,
     uptime: 99,
     cpuUsage: 20,
-    ramUsage: 40,
-    diskUsage: 30,
     region: "local",
   },
 ];
@@ -58,7 +52,7 @@ function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }) {
       </div>
       <div className="text-sm text-gray-500 mb-2">Region: {device.region}</div>
       <div className="text-sm text-gray-500 mb-2">
-        CPU: {device.cpuUsage}%, RAM: {device.ramUsage}%, Disk: {device.diskUsage}%
+        CPU: {device.cpuUsage}%
       </div>
       <button
         className="w-full bg-white text-black font-semibold rounded-sm border py-1 shadow mb-1 hover:bg-zinc-100"
@@ -182,8 +176,6 @@ function App() {
         icon: EC2_ICON,
         uptime: 0,
         cpuUsage: 0,
-        ramUsage: 0,
-        diskUsage: 0,
         region: "us-east-1",
       },
     ]);
