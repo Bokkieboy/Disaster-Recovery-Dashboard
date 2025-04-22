@@ -1,12 +1,10 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import boto3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-
-import boto3
-from datetime import datetime, timedelta
-
+CORS(app)  # Enable CORS for all routes
 instance_id = 'i-0dc17676ee962edcd'
 
 def get_latest_cpu_utilization():
@@ -17,32 +15,27 @@ def get_latest_cpu_utilization():
     response = cloudwatch_client.get_metric_statistics(
         Namespace='AWS/EC2',
         MetricName='CPUUtilization',
-        Dimensions=[
-            {
-                'Name': 'InstanceId',
-                'Value': instance_id
-            },
-        ],
+        Dimensions=[{'Name': 'InstanceId', 'Value': instance_id}],
         StartTime=start_time,
         EndTime=end_time,
-        Period=60,  # 1 minute
+        Period=60,
         Statistics=['Average']
     )
 
     datapoints = response['Datapoints']
     if not datapoints:
-        print("No data available.")
-        return None
+        return None, None
 
-    # Sort datapoints by Timestamp to get the latest one
-    latest_datapoint = sorted(datapoints, key=lambda x: x['Timestamp'], reverse=True)[0]
-    return latest_datapoint['Average'], latest_datapoint['Timestamp']
+    latest = sorted(datapoints, key=lambda x: x['Timestamp'], reverse=True)[0]
+    return latest['Average'], latest['Timestamp']
 
-# Get the most recent CPU utilization
-cpu_usage, timestamp = get_latest_cpu_utilization()
-
-if cpu_usage is not None:
-    return jsonify({'cpu': f"{cpu_usage:.2f}"})
+@app.route('/api/cpu')
+def get_cpu():
+    cpu_usage, timestamp = get_latest_cpu_utilization()
+    if cpu_usage is not None:
+        return jsonify({'cpu': round(cpu_usage, 2)})
+    else:
+        return jsonify({'error': 'No CPU data available'}), 503
 
 if __name__ == '__main__':
-    app.run(debug=True, port=3001)
+    app.run(debug=True)
