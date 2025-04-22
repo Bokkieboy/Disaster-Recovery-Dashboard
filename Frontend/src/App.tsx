@@ -37,7 +37,7 @@ const devicesInitial = [
   },
 ];
 
-function DeviceCard({ device, onShutdown, onReboot, onAdd }) {
+function DeviceCard({ device, onShutdown, onReboot, onOn }) {
   return (
     <div
       style={{ width: 200 }}
@@ -50,7 +50,7 @@ function DeviceCard({ device, onShutdown, onReboot, onAdd }) {
         style={{ width: 72, height: 72, objectFit: "contain" }}
         className="mb-2 rounded-lg border"
       />
-      <div className="font-semibold text-center text-sm mb-1">
+      <div className="font-semibold text-center text-sm mb-1 text-slate-400">
         {device.type}
       </div>
       <div className="text-sm text-gray-500 mb-2">Region: {device.region}</div>
@@ -71,9 +71,9 @@ function DeviceCard({ device, onShutdown, onReboot, onAdd }) {
       </button>
       <button
         className="w-full bg-white text-black font-semibold rounded-sm border py-1 shadow hover:bg-zinc-100"
-        onClick={onAdd}
+        onClick={onOn}
       >
-        Add
+        Switch on
       </button>
     </div>
   );
@@ -165,7 +165,7 @@ function App() {
             device={device}
             onShutdown={() => handleShutdown(device.id)}
             onReboot={() => handleReboot(device.id)}
-            onAdd={() => handleAdd(device.id)}
+            onOn={() => handleAdd(device.id)}
           />
         ))}
 
