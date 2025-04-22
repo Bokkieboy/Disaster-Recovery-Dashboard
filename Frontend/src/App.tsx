@@ -9,29 +9,41 @@ const devicesInitial = [
     id: 1,
     type: "Amazon EC2",
     icon: EC2_ICON,
-    uptime: 6,
+    uptime: 95, // in percentage
+    cpuUsage: 45, // in percentage
+    ramUsage: 70, // in percentage
+    diskUsage: 60, // in percentage
+    region: "us-east-1",
   },
   {
     id: 2,
     type: "Amazon EC2",
     icon: EC2_ICON,
-    uptime: 32,
+    uptime: 85,
+    cpuUsage: 30,
+    ramUsage: 50,
+    diskUsage: 40,
+    region: "us-west-2",
   },
   {
     id: 3,
     type: "Home Server",
     icon: SERVER_ICON,
-    uptime: 1,
+    uptime: 99,
+    cpuUsage: 20,
+    ramUsage: 40,
+    diskUsage: 30,
+    region: "local",
   },
 ];
 
 function DeviceCard({ device, onShutdown, onReboot, onAdd }) {
   return (
     <div
-      style={{ width: 170 }}
+      style={{ width: 200 }}
       className="flex flex-col items-center p-3 rounded-md bg-black/10 shadow-md mx-3 mt-6"
     >
-      <div className="text-lg font-bold mb-1">{device.uptime}%</div>
+      <div className="text-lg font-bold mb-1 text-white">{device.uptime}% Uptime</div> {/* Added text-white */}
       <img
         src={device.icon}
         alt={device.type}
@@ -40,6 +52,10 @@ function DeviceCard({ device, onShutdown, onReboot, onAdd }) {
       />
       <div className="font-semibold text-center text-sm mb-1">
         {device.type}
+      </div>
+      <div className="text-sm text-gray-500 mb-2">Region: {device.region}</div>
+      <div className="text-sm text-gray-500 mb-2">
+        CPU: {device.cpuUsage}%, RAM: {device.ramUsage}%, Disk: {device.diskUsage}%
       </div>
       <button
         className="w-full bg-white text-black font-semibold rounded-sm border py-1 shadow mb-1 hover:bg-zinc-100"
@@ -107,15 +123,18 @@ function App() {
     alert(`Add triggered for device ID ${id}`);
   };
   const handleAddAnotherDevice = () => {
-    // TODO: Wire this to actual add logic (form/modal/API)
     const nextId = Math.max(...devices.map((d) => d.id)) + 1;
     setDevices([
       ...devices,
       {
         id: nextId,
-        type: "New Device",
+        type: "Amazon EC2",
         icon: EC2_ICON,
         uptime: 0,
+        cpuUsage: 0,
+        ramUsage: 0,
+        diskUsage: 0,
+        region: "us-east-1",
       },
     ]);
   };
