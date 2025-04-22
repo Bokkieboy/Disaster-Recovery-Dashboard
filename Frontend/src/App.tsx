@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CPUMonitor from './components/CPUMonitor';
+import ConfirmationModal from './components/ConfirmationModal';
 
 // Image URLs (replace with your own or static CDN if needed)
 const EC2_ICON = "https://ugc.same-assets.com/8wU1D40_3LpE9jfPvDe3E9Bii0g185xi.jpeg"; // microchip icon
@@ -38,7 +39,7 @@ const devicesInitial = [
   },
 ];
 
-function DeviceCard({ device, onShutdown, onReboot, onOn }) {
+function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }) {
   return (
     <div
       style={{ width: 200 }}
@@ -76,6 +77,12 @@ function DeviceCard({ device, onShutdown, onReboot, onOn }) {
       >
         Switch on
       </button>
+      <button
+        className="w-full bg-red-500 text-white font-semibold rounded-sm border py-1 shadow hover:bg-red-600"
+        onClick={onDelete}
+      >
+        Delete
+      </button>
     </div>
   );
 }
@@ -109,21 +116,41 @@ function App() {
   const [devices, setDevices] = useState(devicesInitial);
   const [greeting] = useState("Hello, User!");
   const globalUptime = Math.max(...devices.map((d) => d.uptime)); // demo
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deviceToDelete, setDeviceToDelete] = useState(null);
+
 
   // Simulated handlers
   const handleShutdown = (id) => {
-    // TODO: Wire this to API to shutdown instance
     alert(`Shutdown triggered for device ID ${id}`);
   };
+
   const handleReboot = (id) => {
-    // TODO: Wire this to API to reboot instance
     alert(`Reboot triggered for device ID ${id}`);
   };
+
   const handleAdd = (id) => {
-    // TODO: Wire this to API to add/duplicate instance
     alert(`Add triggered for device ID ${id}`);
   };
+
+  const handleDelete = (id) => {
+    setIsModalOpen(true);
+    setDeviceToDelete(id);
+  };
+
+  const confirmDelete = () => {
+    setDevices(devices.filter((device) => device.id !== deviceToDelete));
+    setIsModalOpen(false);
+    setDeviceToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setIsModalOpen(false);
+    setDeviceToDelete(null);
+  };
+
   const handleAddAnotherDevice = () => {
+    console.log("Add another device button clicked");
     const nextId = Math.max(...devices.map((d) => d.id)) + 1;
     setDevices([
       ...devices,
@@ -167,6 +194,7 @@ function App() {
             onShutdown={() => handleShutdown(device.id)}
             onReboot={() => handleReboot(device.id)}
             onOn={() => handleAdd(device.id)}
+            onDelete={() => handleDelete(device.id)} // Pass delete handler
           />
         ))}
 
@@ -181,6 +209,13 @@ function App() {
           </button>
         </div>
       </div>
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+        isOpen={isModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        message="Are you sure you want to delete this instance?"
+      />
     </div>
   );
 }
