@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CPUMonitor from './components/CPUMonitor';
 
 // Image URLs (replace with your own or static CDN if needed)
 const EC2_ICON = "https://ugc.same-assets.com/8wU1D40_3LpE9jfPvDe3E9Bii0g185xi.jpeg"; // microchip icon
