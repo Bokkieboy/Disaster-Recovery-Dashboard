@@ -7,7 +7,7 @@ export default function CPUMonitor() {
   useEffect(() => {
     const fetchCPU = async () => {
       try {
-        const res = await fetch('http://localhost:3001/metrics'); // Backend API endpoint
+        const res = await fetch('http://localhost:5000:/api/cpu'); // Backend API endpoint
         const data = await res.json();
         setCpu(data.cpu);
       } catch (error) {
