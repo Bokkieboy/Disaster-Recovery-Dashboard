@@ -13,7 +13,7 @@ const devicesInitial = [
     icon: EC2_ICON,
     uptime: 95, // in percentage
     cpuUsage: 0, // in percentage
-    region: "us-east-1",
+    region: "eu-west-2",
   },
   {
     id: 2,
@@ -118,7 +118,7 @@ function App() {
   useEffect(() => {
     const fetchCPU = async () => {
       try {
-        const res = await fetch('http://127.0.0.1:5000/api/cpu'); // Replace with your backend API endpoint
+        const res = await fetch('http://13.42.64.118:5000/api/cpu'); // Backend API endpoint
         const data = await res.json();
         setDevices((prevDevices) =>
           prevDevices.map((device) =>
@@ -176,7 +176,7 @@ function App() {
         icon: EC2_ICON,
         uptime: 0,
         cpuUsage: 0,
-        region: "us-east-1",
+        region: "eu-west-2",
       },
     ]);
   };
