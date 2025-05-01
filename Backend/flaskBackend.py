@@ -4,7 +4,7 @@ import boto3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins
+CORS(app, origins=["http://13.42.64.118:5173", "http://localhost:5173"])
 instance_id = 'i-0dc17676ee962edcd'
 
 def get_latest_cpu_utilization():
@@ -28,6 +28,28 @@ def get_latest_cpu_utilization():
 
     latest = sorted(datapoints, key=lambda x: x['Timestamp'], reverse=True)[0]
     return latest['Average'], latest['Timestamp']
+
+@app.route('/api/uptime')
+def get_uptime():
+    ec2 = boto3.client('ec2')
+
+    try:
+        response = ec2.describe_instances(InstanceIds=[instance_id])
+        launch_time = response['Reservations'][0]['Instances'][0]['LaunchTime']  # UTC
+
+        now = datetime.utcnow()
+        uptime_duration = now - launch_time.replace(tzinfo=None)  # strip timezone
+
+        # Format uptime as "X days, HH:MM:SS"
+        formatted_uptime = str(uptime_duration).split('.')[0]
+        uptime_days = uptime_duration.total_seconds() / 86400  # 86400 seconds/day
+
+        return jsonify({
+            'uptime': formatted_uptime,
+            'uptime_days': round(uptime_days, 2)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/cpu')
 def get_cpu():
