@@ -11,7 +11,7 @@ const devicesInitial = [
     id: 1,
     type: "Amazon EC2",
     icon: EC2_ICON,
-    uptime: 95, // in percentage
+    uptime: "Unknown", // changed from percentage to string
     cpuUsage: 0, // in percentage
     region: "eu-west-2",
   },
@@ -19,7 +19,7 @@ const devicesInitial = [
     id: 2,
     type: "Amazon EC2",
     icon: EC2_ICON,
-    uptime: 85,
+    uptime: "Unknown",
     cpuUsage: 30,
     region: "us-west-2",
   },
@@ -27,7 +27,7 @@ const devicesInitial = [
     id: 3,
     type: "Home Server",
     icon: SERVER_ICON,
-    uptime: 99,
+    uptime: "Unknown",
     cpuUsage: 20,
     region: "local",
   },
@@ -40,7 +40,7 @@ function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }) {
       style={{ width: 200 }}
       className="flex flex-col items-center p-3 rounded-md bg-black/10 shadow-md mx-3 mt-6"
     >
-      <div className="text-lg font-bold mb-1 text-white">{device.uptime}% Uptime</div> {/* Added text-white */}
+      <div className="text-lg font-bold mb-1 text-white">Uptime: {device.uptime}</div>
       <img
         src={device.icon}
         alt={device.type}
@@ -110,12 +110,32 @@ function UptimeBar({ value = 90 }) {
 function App() {
   const [devices, setDevices] = useState(devicesInitial);
   const [greeting] = useState("Hello, User!");
-  const globalUptime = Math.max(...devices.map((d) => d.uptime)); // demo
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState(null);
 
   // Fetch real-time CPU usage for EC2 instance with id: 1
   useEffect(() => {
+    // Fetch uptime from backend API, convert to percentage (uptime in days / 7 days * 100, max 100)
+    const fetchUptime = async () => {
+      try {
+        const res = await fetch('http://13.42.64.118:5000/api/uptime');
+        const data = await res.json();
+        setDevices((prevDevices) =>
+          prevDevices.map((device) =>
+            device.id === 1
+              ? {
+                  ...device,
+                  uptime: data.uptime,
+                  uptimeDays: data.uptime_days
+                }
+              : device
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching uptime:", error);
+      }
+    };
+    // Fetch CPU usage from backend API
     const fetchCPU = async () => {
       try {
         const res = await fetch('http://13.42.64.118:5000/api/cpu'); // Backend API endpoint
@@ -130,6 +150,10 @@ function App() {
       }
     };
     // Fetch immediately and then every 30 seconds
+    fetchUptime();
+    const upTimeinterval = setInterval(fetchUptime, 30000); 
+
+
     fetchCPU();
     const interval = setInterval(fetchCPU, 30000);
 
@@ -174,7 +198,7 @@ function App() {
         id: nextId,
         type: "Amazon EC2",
         icon: EC2_ICON,
-        uptime: 0,
+        uptime: "Unknown",
         cpuUsage: 0,
         region: "eu-west-2",
       },
@@ -192,11 +216,6 @@ function App() {
         >
           {greeting}
         </div>
-      </div>
-
-      {/* Uptime */}
-      <div className="w-full flex flex-col items-center mt-10">
-        <UptimeBar value={globalUptime} />
       </div>
 
       {/* Devices List */}
