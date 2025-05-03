@@ -33,7 +33,24 @@ const devicesInitial = [
   },
 ];
 
-function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }) {
+type Device = {
+  id: number;
+  type: string;
+  icon: string;
+  uptime: string;
+  cpuUsage: number;
+  region: string;
+};
+
+type DeviceCardProps = {
+  device: Device;
+  onShutdown: () => void;
+  onReboot: () => void;
+  onOn: () => void;
+  onDelete: () => void;
+};
+
+function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }: DeviceCardProps) {
   return (
     
     <div
@@ -111,14 +128,14 @@ function App() {
   const [devices, setDevices] = useState(devicesInitial);
   const [greeting] = useState("Hello, User!");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deviceToDelete, setDeviceToDelete] = useState(null);
+  const [deviceToDelete, setDeviceToDelete] = useState<number | null>(null);
 
   // Fetch real-time CPU usage for EC2 instance with id: 1
   useEffect(() => {
     // Fetch uptime from backend API, convert to percentage (uptime in days / 7 days * 100, max 100)
     const fetchUptime = async () => {
       try {
-        const res = await fetch('http://13.42.64.118:5000/api/uptime');
+        const res = await fetch('http://localhost:5000/api/uptime');
         const data = await res.json();
         setDevices((prevDevices) =>
           prevDevices.map((device) =>
@@ -138,7 +155,7 @@ function App() {
     // Fetch CPU usage from backend API
     const fetchCPU = async () => {
       try {
-        const res = await fetch('http://13.42.64.118:5000/api/cpu'); // Backend API endpoint
+        const res = await fetch('http://localhost:5000/api/cpu'); // Backend API endpoint
         const data = await res.json();
         setDevices((prevDevices) =>
           prevDevices.map((device) =>
@@ -161,19 +178,19 @@ function App() {
   }, []);
 
   // Simulated handlers
-  const handleShutdown = (id) => {
+  const handleShutdown = (id: number) => {
     alert(`Shutdown triggered for device ID ${id}`);
   };
-
-  const handleReboot = (id) => {
+  
+  const handleReboot = (id: number) => {
     alert(`Reboot triggered for device ID ${id}`);
   };
-
-  const handleAdd = (id) => {
+  
+  const handleAdd = (id: number) => {
     alert(`Add triggered for device ID ${id}`);
   };
-
-  const handleDelete = (id) => {
+  
+  const handleDelete = (id: number) => {
     setIsModalOpen(true);
     setDeviceToDelete(id);
   };
