@@ -4,7 +4,7 @@ import boto3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-CORS(app, origins=["http://13.42.64.118:5173", "http://localhost:5173"])
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
 instance_id = 'i-0dc17676ee962edcd'
 
 def get_latest_cpu_utilization():

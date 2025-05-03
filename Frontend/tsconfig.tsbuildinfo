@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/lib/utils.ts","./vite.config.ts"],"errors":true,"version":"5.6.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/api/metrics.ts","./src/components/cpumonitor.tsx","./src/components/confirmationmodal.tsx","./src/lib/utils.ts","./vite.config.ts"],"version":"5.6.3"}

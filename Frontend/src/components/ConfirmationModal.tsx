@@ -1,6 +1,14 @@
 import React from "react";
 
-function ConfirmationModal({ isOpen, onConfirm, onCancel, message }) {
+// Define prop types
+type ConfirmationModalProps = {
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+  message: string;
+};
+
+function ConfirmationModal({ isOpen, onConfirm, onCancel, message }: ConfirmationModalProps) {
   if (!isOpen) return null;
 
   return (
