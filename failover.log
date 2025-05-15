@@ -3,3 +3,80 @@ INFO:root:EC2 instance state: running
 INFO:root:EC2 is running normally.
 INFO:root:EC2 instance state: running
 INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.
+INFO:root:No instance status available (likely stopped or terminated).
+WARNING:root:EC2 is down. Starting local services...
+ERROR:root:Error starting local services: Command '['docker', 'start', 'dr_dashboard_backend']' returned non-zero exit status 1.

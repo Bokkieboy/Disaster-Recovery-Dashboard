@@ -8,8 +8,8 @@ import logging
 EC2_INSTANCE_ID = "i-0dc17676ee962edcd"
 REGION = "eu-west-2"
 CHECK_INTERVAL = 60  # in seconds
-FRONTEND_CONTAINER = "dr_dashboard_frontend"
-BACKEND_CONTAINER = "dr_dashboard_backend"
+FRONTEND_CONTAINER = "disasterrecoverydashboard-frontend-1"
+BACKEND_CONTAINER = "disasterrecoverydashboard-backend-1"
 
 logging.basicConfig(filename='failover.log', level=logging.INFO)
 
