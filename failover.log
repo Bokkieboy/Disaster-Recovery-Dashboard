@@ -1,0 +1,5 @@
+INFO:botocore.credentials:Found credentials in shared credentials file: ~/.aws/credentials
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
+INFO:root:EC2 instance state: running
+INFO:root:EC2 is running normally.
