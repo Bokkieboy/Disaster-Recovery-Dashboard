@@ -14,3 +14,7 @@ services:
     environment:
       - FLASK_ENV=production
     restart: unless-stopped
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    env_file:
+      - .env
