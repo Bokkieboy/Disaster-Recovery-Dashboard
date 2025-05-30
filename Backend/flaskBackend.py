@@ -2,10 +2,19 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import boto3
 from datetime import datetime, timedelta
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000"]}})
 instance_id = 'i-0dc17676ee962edcd'
+
+# Set up rate limiting
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["100 per minute"],  # Example: max 100 requests/minute per IP
+)
 
 def get_latest_cpu_utilization():
     cloudwatch_client = boto3.client('cloudwatch')
