@@ -17,7 +17,7 @@ limiter = Limiter(
 )
 
 def get_latest_cpu_utilization():
-    cloudwatch_client = boto3.client('cloudwatch')
+    cloudwatch_client = boto3.client('cloudwatch', region_name='eu-west-2')
     end_time = datetime.utcnow()
     start_time = end_time - timedelta(minutes=10)
 
