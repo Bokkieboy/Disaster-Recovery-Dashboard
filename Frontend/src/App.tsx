@@ -178,19 +178,38 @@ function App() {
   }, []);
 
   // Simulated handlers
-  const handleShutdown = (id: number) => {
-    alert(`Shutdown triggered for device ID ${id}`);
+  // FIX: Explicitly type 'id' as number and handle 'err' as 'unknown'
+  const handleShutdown = async (id: number) => { // Added ': number'
+    try {
+      await fetch('http://localhost:5000/api/stop', { method: 'POST' });
+      // Changed alert to use a custom modal or message box if you have one,
+      // or keep alert for now, but be aware of its limitations in Canvas.
+      // For now, keeping alert as per original code, but handling error type.
+      alert(`Shutdown initiated for EC2 instance.`);
+    } catch (err: unknown) { // Added ': unknown'
+      // Safely access error message
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert("Failed to shutdown: " + errorMessage);
+    }
   };
   
-  const handleReboot = (id: number) => {
+  const handleReboot = (id: number) => { // Added ': number'
     alert(`Reboot triggered for device ID ${id}`);
   };
   
-  const handleAdd = (id: number) => {
-    alert(`Add triggered for device ID ${id}`);
+  // FIX: Explicitly type 'id' as number and handle 'err' as 'unknown'
+  const handleAdd = async (id: number) => { // Added ': number'
+    try {
+      await fetch('http://localhost:5000/api/start', { method: 'POST' });
+      alert(`Start initiated for EC2 instance.`);
+    } catch (err: unknown) { // Added ': unknown'
+      // Safely access error message
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      alert("Failed to start: " + errorMessage);
+    }
   };
   
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number) => { // Added ': number'
     setIsModalOpen(true);
     setDeviceToDelete(id);
   };
