@@ -45,15 +45,22 @@ DisasterRecoveryDashboard/
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/DisasterRecoveryDashboard.git
+git clone [https://github.com/your-username/DisasterRecoveryDashboard.git](https://github.com/your-username/DisasterRecoveryDashboard.git)
 cd DisasterRecoveryDashboard
 ```
 
 ### Build and Run the Docker Containers
 
+For routine updates and initial setup:
 ```bash
-docker-compose build
-docker-compose up -d
+docker-compose up -d --build
+```
+This command will build the images if they don't exist or if their Dockerfiles/contexts have changed, and then start the services in detached mode.
+
+If you need a complete teardown (e.g., to remove old volumes):
+```bash
+docker-compose down -v
+docker-compose up -d --build
 ```
 
 ### Access the Dashboard
@@ -117,13 +124,23 @@ AWS_REGION=eu-west-2
 
 * **GET** `/api/cpu`: Returns the current CPU utilization for the EC2 instance.
 
-Example Response:
+    Example Response:
+    ```json
+    {
+      "cpu": 27.5
+    }
+    ```
 
-```json
-{
-  "cpu": 27.5
-}
-```
+* **GET** `/api/uptime`: Returns the uptime for the EC2 instance.
+
+    Example Response (actual structure may vary based on your implementation):
+    ```json
+    {
+      "uptime": "7 days, 2 hours, 30 minutes",
+      "uptime_days": 7.1,
+      "status": "Running"
+    }
+    ```
 
 ---
 
