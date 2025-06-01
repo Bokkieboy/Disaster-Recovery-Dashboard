@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CPUMonitor from './components/CPUMonitor';
+// import CPUMonitor from './components/CPUMonitor'; // Assuming this might be used later or was part of a larger setup
 import ConfirmationModal from './components/ConfirmationModal';
 
 // Image URLs (replace with your own or static CDN if needed)
@@ -42,15 +42,17 @@ type Device = {
   region: string;
 };
 
+// --- Step 2: Remove onReboot from DeviceCardProps ---
 type DeviceCardProps = {
   device: Device;
   onShutdown: () => void;
-  onReboot: () => void;
+  // onReboot: () => void; // Removed
   onOn: () => void;
   onDelete: () => void;
 };
 
-function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }: DeviceCardProps) {
+// --- Step 3: Remove onReboot from DeviceCard parameters ---
+function DeviceCard({ device, onShutdown, onOn, onDelete }: DeviceCardProps) {
   return (
     
     <div
@@ -77,12 +79,15 @@ function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }: DeviceCard
       >
         Shutdown
       </button>
+      {/* --- Step 1: Remove the Reboot button --- */}
+      {/*
       <button
         className="w-full bg-white text-black font-semibold rounded-sm border py-1 shadow mb-1 hover:bg-zinc-100"
-        onClick={onReboot}
+        onClick={onReboot} // This onClick would also be removed
       >
         Reboot
       </button>
+      */}
       <button
         className="w-full bg-white text-black font-semibold rounded-sm border py-1 shadow hover:bg-zinc-100"
         onClick={onOn}
@@ -90,7 +95,7 @@ function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }: DeviceCard
         Switch on
       </button>
       <button
-        className="w-full bg-red-500 text-white font-semibold rounded-sm border py-1 shadow hover:bg-red-600"
+        className="w-full bg-red-500 text-white font-semibold rounded-sm border py-1 shadow hover:bg-red-600 mt-1" // Added mt-1 for spacing if needed
         onClick={onDelete}
       >
         Delete
@@ -99,6 +104,7 @@ function DeviceCard({ device, onShutdown, onReboot, onOn, onDelete }: DeviceCard
   );
 }
 
+// UptimeBar component remains unchanged
 function UptimeBar({ value = 90 }) {
   // value = percentage
   const totalSegments = 30;
@@ -124,15 +130,14 @@ function UptimeBar({ value = 90 }) {
   );
 }
 
+
 function App() {
   const [devices, setDevices] = useState(devicesInitial);
   const [greeting] = useState("Hello, User!");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState<number | null>(null);
 
-  // Fetch real-time CPU usage for EC2 instance with id: 1
   useEffect(() => {
-    // Fetch uptime from backend API, convert to percentage (uptime in days / 7 days * 100, max 100)
     const fetchUptime = async () => {
       try {
         const res = await fetch('http://localhost:5000/api/uptime');
@@ -143,19 +148,25 @@ function App() {
               ? {
                   ...device,
                   uptime: data.uptime,
-                  uptimeDays: data.uptime_days
+                  // uptimeDays: data.uptime_days // Assuming uptimeDays might still be useful for other logic
                 }
               : device
           )
         );
       } catch (error) {
         console.error("Error fetching uptime:", error);
+        // Optionally update UI to show uptime is unavailable for device.id === 1
+        setDevices((prevDevices) =>
+          prevDevices.map((device) =>
+            device.id === 1 ? { ...device, uptime: "Error" } : device
+          )
+        );
       }
     };
-    // Fetch CPU usage from backend API
+
     const fetchCPU = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/cpu'); // Backend API endpoint
+        const res = await fetch('http://localhost:5000/api/cpu');
         const data = await res.json();
         setDevices((prevDevices) =>
           prevDevices.map((device) =>
@@ -164,58 +175,66 @@ function App() {
         );
       } catch (error) {
         console.error("Error fetching CPU metrics:", error);
+         // Optionally update UI to show CPU usage is unavailable for device.id === 1
+         setDevices((prevDevices) =>
+          prevDevices.map((device) =>
+            device.id === 1 ? { ...device, cpuUsage: NaN } : device // Or some other indicator
+          )
+        );
       }
     };
-    // Fetch immediately and then every 30 seconds
-    fetchUptime();
-    const upTimeinterval = setInterval(fetchUptime, 30000); 
 
+    fetchUptime();
+    const upTimeInterval = setInterval(fetchUptime, 30000);
 
     fetchCPU();
-    const interval = setInterval(fetchCPU, 30000);
+    const cpuInterval = setInterval(fetchCPU, 30000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(upTimeInterval);
+      clearInterval(cpuInterval);
+    };
   }, []);
 
-  // Simulated handlers
-  // FIX: Explicitly type 'id' as number and handle 'err' as 'unknown'
-  const handleShutdown = async (id: number) => { // Added ': number'
+  const handleShutdown = async (id: number) => {
     try {
-      await fetch('http://localhost:5000/api/stop', { method: 'POST' });
-      // Changed alert to use a custom modal or message box if you have one,
-      // or keep alert for now, but be aware of its limitations in Canvas.
-      // For now, keeping alert as per original code, but handling error type.
-      alert(`Shutdown initiated for EC2 instance.`);
-    } catch (err: unknown) { // Added ': unknown'
-      // Safely access error message
+      if (id === 1) {
+        await fetch('http://localhost:5000/api/stop', { method: 'POST' });
+        alert(`Shutdown initiated for EC2 instance (ID: ${id}).`);
+      } else {
+        alert(`Shutdown action for device ID ${id} (not EC2 id:1) - no API call configured.`);
+      }
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       alert("Failed to shutdown: " + errorMessage);
     }
   };
   
-  const handleReboot = (id: number) => { // Added ': number'
-    alert(`Reboot triggered for device ID ${id}`);
-  };
   
-  // FIX: Explicitly type 'id' as number and handle 'err' as 'unknown'
-  const handleAdd = async (id: number) => { // Added ': number'
+  const handleAdd = async (id: number) => {
     try {
-      await fetch('http://localhost:5000/api/start', { method: 'POST' });
-      alert(`Start initiated for EC2 instance.`);
-    } catch (err: unknown) { // Added ': unknown'
-      // Safely access error message
+      // Assuming you only want to start the specific EC2 instance (id: 1) for now
+      if (id === 1) {
+        await fetch('http://localhost:5000/api/start', { method: 'POST' });
+        alert(`Start initiated for EC2 instance (ID: ${id}).`);
+      } else {
+        alert(`Start action for device ID ${id} (not EC2 id:1) - no API call configured.`);
+      }
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       alert("Failed to start: " + errorMessage);
     }
   };
   
-  const handleDelete = (id: number) => { // Added ': number'
+  const handleDelete = (id: number) => {
     setIsModalOpen(true);
     setDeviceToDelete(id);
   };
 
   const confirmDelete = () => {
-    setDevices(devices.filter((device) => device.id !== deviceToDelete));
+    if (deviceToDelete !== null) {
+      setDevices(devices.filter((device) => device.id !== deviceToDelete));
+    }
     setIsModalOpen(false);
     setDeviceToDelete(null);
   };
@@ -227,23 +246,22 @@ function App() {
 
   const handleAddAnotherDevice = () => {
     console.log("Add another device button clicked");
-    const nextId = Math.max(...devices.map((d) => d.id)) + 1;
+    const nextId = devices.length > 0 ? Math.max(...devices.map((d) => d.id)) + 1 : 1;
     setDevices([
       ...devices,
       {
         id: nextId,
-        type: "Amazon EC2",
+        type: "Amazon EC2", // Default new device type
         icon: EC2_ICON,
         uptime: "Unknown",
         cpuUsage: 0,
-        region: "eu-west-2",
+        region: "eu-west-2", // Default region
       },
     ]);
   };
 
   return (
     <div className="min-h-screen bg-[#111132]">
-      {/* Top Bar */}
       <div className="bg-black w-full py-5 flex items-center justify-center relative">
         <h1 className="text-2xl font-semibold text-white">Disaster Recovery</h1>
         <div
@@ -254,20 +272,19 @@ function App() {
         </div>
       </div>
 
-      {/* Devices List */}
       <div className="flex flex-row justify-center flex-wrap w-full max-w-5xl mx-auto mt-12">
         {devices.map((device) => (
           <DeviceCard
             key={device.id}
             device={device}
             onShutdown={() => handleShutdown(device.id)}
-            onReboot={() => handleReboot(device.id)}
+            // --- Step 4: Remove onReboot prop passed to DeviceCard ---
+            // onReboot={() => handleReboot(device.id)} // Removed
             onOn={() => handleAdd(device.id)}
-            onDelete={() => handleDelete(device.id)} // Pass delete handler
+            onDelete={() => handleDelete(device.id)}
           />
         ))}
 
-        {/* Add another device button */}
         <div className="flex flex-col items-center justify-center ml-8 mt-12">
           <button
             className="bg-indigo-400 text-white px-8 py-5 rounded-lg shadow-lg hover:bg-indigo-500 text-lg font-semibold"
@@ -278,8 +295,7 @@ function App() {
           </button>
         </div>
       </div>
-            {/* Confirmation Modal */}
-            <ConfirmationModal
+      <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
