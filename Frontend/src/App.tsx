@@ -145,6 +145,8 @@ function App() {
 
   // Use environment variable for API base URL if available (Vite specific)
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+  console.log("Frontend is using API_BASE_URL:", API_BASE_URL); 
+
 
   const fetchData = useCallback(async () => {
     // Don't set global isLoading for interval refreshes, only for initial
