@@ -18,3 +18,11 @@ services:
       - ~/.aws:/root/.aws:ro
     env_file:
       - .env
+
+  failover-monitor:
+    build: ./FailoverMonitor 
+    restart: unless-stopped
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    env_file:
+      - .env 
