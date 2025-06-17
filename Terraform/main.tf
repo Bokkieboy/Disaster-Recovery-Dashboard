@@ -168,65 +168,11 @@ resource "aws_instance" "backup" {
   }
 }
 
-# --- SNS Topic for Notifications (in Primary Region) ---
-resource "aws_sns_topic" "failover_notifications" {
-  provider = aws.primary
-  name     = "FailoverNotificationsTopicMultiRegion"
-}
-
-# --- SQS Queue for Failover Notifications (in Primary Region) ---
-resource "aws_sqs_queue" "failover_notifications_queue" {
-  provider = aws.primary
-  name     = "FailoverNotificationQueue"
-  # For production, consider setting up a dead-letter queue (DLQ):
-  # redrive_policy = jsonencode({
-  #   deadLetterTargetArn = aws_sqs_queue.failover_dlq.arn # Define failover_dlq separately
-  #   maxReceiveCount     = 5
-  # })
-  tags = {
-    Purpose = "FailoverNotifications"
-  }
-}
-
-# --- SNS Topic Subscription for the SQS Queue ---
-resource "aws_sns_topic_subscription" "sqs_failover_subscription" {
-  provider  = aws.primary
-  topic_arn = aws_sns_topic.failover_notifications.arn
-  protocol  = "sqs"
-  endpoint  = aws_sqs_queue.failover_notifications_queue.arn
-  # raw_message_delivery = true # Consider setting to true if your script parses raw CloudWatch alarm JSON
-}
-
-# --- SQS Queue Policy to allow SNS to send messages ---
-resource "aws_sqs_queue_policy" "failover_notifications_queue_policy" {
-  provider  = aws.primary
-  queue_url = aws_sqs_queue.failover_notifications_queue.id # .id is the URL
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "sns.amazonaws.com"
-        },
-        Action   = "sqs:SendMessage",
-        Resource = aws_sqs_queue.failover_notifications_queue.arn,
-        Condition = {
-          ArnEquals = {
-            "aws:SourceArn" = aws_sns_topic.failover_notifications.arn
-          }
-        }
-      }
-    ]
-  })
-}
-
 # --- IAM Policy (Global) ---
 resource "aws_iam_policy" "home_server_ec2_manager_policy" {
   provider    = aws.primary # IAM is global, but provider assignment is good practice
   name        = "HomeServerEC2ManagerPolicyMultiRegion"
-  description = "Allows describing EC2/CloudWatch, starting/stopping EC2, and SQS access for failover."
+  description = "Allows describing EC2/CloudWatch, starting/stopping EC2 for failover."
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -248,21 +194,6 @@ resource "aws_iam_policy" "home_server_ec2_manager_policy" {
           "ec2:StopInstances"
         ]
         Resource = "*" # Scope down with conditions if possible.
-      },
-      { # SNS Publish (if needed for other direct SNS publishing by home server)
-        Effect   = "Allow",
-        Action   = "sns:Publish",
-        Resource = aws_sns_topic.failover_notifications.arn
-      },
-      # --- ADDED SQS PERMISSIONS ---
-      {
-        Effect = "Allow",
-        Action = [
-          "sqs:ReceiveMessage",
-          "sqs:DeleteMessage",
-          "sqs:GetQueueAttributes"
-        ],
-        Resource = aws_sqs_queue.failover_notifications_queue.arn # Specific to this queue
       }
     ]
   })
@@ -287,18 +218,12 @@ resource "aws_cloudwatch_metric_alarm" "main_instance_unhealthy" {
     InstanceId = aws_instance.main.id
   }
 
-  alarm_actions = [aws_sns_topic.failover_notifications.arn]
-  ok_actions    = [aws_sns_topic.failover_notifications.arn] # Notify on recovery too
+  # NOTE: alarm_actions and ok_actions are now empty as SNS is removed.
+  # If you need notifications, you'll need to re-add SNS or another notification method.
+  alarm_actions = []
+  ok_actions    = []
 }
 
-# --- SNS Topic Subscription (Email Example - in Primary Region) ---
-resource "aws_sns_topic_subscription" "email_notifications" {
-  provider  = aws.primary
-  count     = var.sns_notification_email != "" ? 1 : 0
-  topic_arn = aws_sns_topic.failover_notifications.arn
-  protocol  = "email"
-  endpoint  = var.sns_notification_email
-}
 
 # --- Outputs ---
 output "main_instance_id" {
@@ -330,18 +255,4 @@ output "backup_instance_region" {
 output "home_server_iam_policy_arn" {
   description = "ARN of the IAM policy for the home server"
   value       = aws_iam_policy.home_server_ec2_manager_policy.arn
-}
-output "sns_topic_arn_for_notifications" {
-  description = "ARN of the SNS topic used for failover notifications"
-  value       = aws_sns_topic.failover_notifications.arn
-}
-
-output "failover_sqs_queue_url" {
-  description = "The URL of the SQS queue for failover notifications (used by home server script)"
-  value       = aws_sqs_queue.failover_notifications_queue.id # .id attribute of aws_sqs_queue gives the URL
-}
-
-output "failover_sqs_queue_arn" {
-  description = "The ARN of the SQS queue for failover notifications"
-  value       = aws_sqs_queue.failover_notifications_queue.arn
 }

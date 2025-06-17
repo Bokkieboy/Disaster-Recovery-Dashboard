@@ -7,14 +7,16 @@ terraform {
   }
 }
 
-# Provider for the primary region (e.g., where your main instance and SQS/SNS are)
+# Provider for the primary region
 provider "aws" {
   alias  = "primary"
   region = var.primary_aws_region
+  profile = "primary"
 }
 
-# Provider for the secondary region (e.g., where your backup instance will be)
+# Provider for the secondary region
 provider "aws" {
   alias  = "secondary"
-  region = var.secondary_aws_region
+  region = var.secondary_aws_regio
+  profile = "secondary"
 }
