@@ -144,7 +144,7 @@ function App() {
   const [fetchError, setFetchError] = useState<string | null>(null); // For API errors
 
   // Use environment variable for API base URL if available (Vite specific)
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://10.0.0.253:5000/api";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"; //Change to your backend URL if needed
   console.log("Frontend is using API_BASE_URL:", API_BASE_URL); 
 
 
