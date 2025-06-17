@@ -29,7 +29,7 @@ const devicesInitial: Device[] = [
     uptime: "Unknown",
     cpuUsage: 0,
     region: "eu-west-2", 
-    awsInstanceId: "i-086152cb766c949b7", 
+    awsInstanceId: "i-072c32506d067a13a", 
     awsRegion: "eu-west-2",                         
     status: "Unknown",
   },
@@ -40,7 +40,7 @@ const devicesInitial: Device[] = [
     uptime: "Unknown",
     cpuUsage: 0,
     region: "eu-west-1", 
-    awsInstanceId: "i-0526477f636ebfeb5", // Removed leading space
+    awsInstanceId: "i-0391db570934d58c5", // Removed leading space
     awsRegion: "eu-west-1",                         
     status: "Unknown",
   },

@@ -17,7 +17,7 @@ ec2 = boto3.client('ec2', region_name=REGION)
 ec2_resource = boto3.resource('ec2', region_name=REGION) # Added for instance description and state
 
 CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "http://10.0.0.253:3000"]}})
-instance_id = 'i-0dc17676ee962edcd' # EC2 instance ID
+instance_id = 'i-072c32506d067a13a' # EC2 instance ID
 
 # Set up rate limiting
 limiter = Limiter(

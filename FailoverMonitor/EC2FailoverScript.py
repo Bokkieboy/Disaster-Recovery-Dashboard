@@ -5,11 +5,11 @@ from botocore.exceptions import ClientError
 
 # --- Configuration ---
 # Main EC2 Instance
-MAIN_INSTANCE_ID = "i-086152cb766c949b7"  
+MAIN_INSTANCE_ID = "i-072c32506d067a13a"  
 MAIN_REGION = "eu-west-2"             
 
 # Backup EC2 Instance
-BACKUP_INSTANCE_ID = "i-0526477f636ebfeb5" 
+BACKUP_INSTANCE_ID = "i-0391db570934d58c5" 
 BACKUP_REGION = "eu-west-1"          
 
 # Script Configuration
