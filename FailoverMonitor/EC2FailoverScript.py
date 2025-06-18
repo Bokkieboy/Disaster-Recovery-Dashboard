@@ -13,7 +13,7 @@ BACKUP_INSTANCE_ID = "i-0391db570934d58c5"
 BACKUP_REGION = "eu-west-1"          
 
 # Script Configuration
-CHECK_INTERVAL_SECONDS = 60  # How often to check (in seconds)
+CHECK_INTERVAL_SECONDS = 5  # How often to check (in seconds)
 LOG_FILE = "failover_monitor.log"
 MAIN_INSTANCE_STABLE_WAIT_SECONDS = 300 # 5 minutes
 
